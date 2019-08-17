@@ -1,0 +1,30 @@
+# Name the graph following '>>'
+#
+# Then define variable using x = Class
+# x could be any str (no space), Class must be 'person' or 'car'
+#
+# Then write definition, each line is a temporal slot, in which
+# the atomic actions are connected with 'and'. Each atomic action
+# is represented as (subject_1 act_name) or (sub_1 act_name sub_2).
+# The subject name must be a defined variable. 
+
+>> grouping
+p1 = person
+p2 = person
+(p1 close p2) and (p1 move) and (p2 move)
+(p1 close p2) and (p1 move) and (p2 move)
+
+>> use_phone
+p1 = person
+(p1 use_phone)
+
+>> give_bag
+p1 = person
+p2 = person 
+(p1 near p2)
+(p1 stop) and (p2 stop) and (p1 with_bag)
+(p1 stop) and (p2 stop) and (p2 with_bag)
+
+>> carry_bag
+p1 = person
+(p1 with_bag)

@@ -1,0 +1,8 @@
+# camera_topology
+# first element is one camera id, followed by neighbor camera ids
+# Each line: cam_id,x0,y0,x1,y1 : cam_id,x0,y0,x1,y1
+#            The left half is the connection area in camera 1
+#            The right half is the connection area in camera 2 (x y in float ratios)
+
+v1, 0, 0, 1.0, 1.0 : v2, 0, 0, 1.0, 1.0
+v2, 0, 0, 1.0, 1.0 : v3, 0, 0, 1.0, 1.0

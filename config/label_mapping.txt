@@ -1,0 +1,5 @@
+1 person
+3 car
+2 bike
+27 bag
+31 bag

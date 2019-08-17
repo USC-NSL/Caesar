@@ -1,0 +1,12 @@
+opencv-python
+tensorflow
+numpy
+tensorflow-estimator==1.10.12  
+tensorflow-probability-gpu
+dm-sonnet==1.23
+six
+grpcio
+grpcio-tools
+protobuf
+flask 
+wtforms
