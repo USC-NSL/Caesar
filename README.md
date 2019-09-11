@@ -1,11 +1,10 @@
-# Caesar Demo
+# Caesar: Cross-Camera Complex Activity Detection
 
 ## Requirements
 - Python 3.X
 - OpenCV 3.X
 - TensorFlow 1.12+
-- Install other py packages in ```requirements.txt```
-- Do not use Mac to run any node because of the [GPRC multiprocessing problem](https://github.com/grpc/grpc/issues/12455)
+- Install other py packages using ```pip install requirements.txt```
 
 ## Structure
 The workflow is shown in the image below. You will run one of the scripts to turn the device into a mobile/tracker/action/web node. 
@@ -25,7 +24,7 @@ The workflow is shown in the image below. You will run one of the scripts to tur
 
 ## Run the Pipeline
 1. **Prepare models** (download the models to the ```checkpoints/``` folder)
-- Object Detection (Option-1: [MobileNet-V2](http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v2_coco_2018_03_29.tar.gz), Option-2: [YOLOv2](https://pjreddie.com/darknet/yolov2/), Option-3: [Mask-RCNN](https://drive.google.com/file/d/1SCJf2JJmyCbxpDuy4njFaDw7xPqurpaQ/view?usp=sharing)). 
+- Object Detection (Option-1: [MobileNet-V2](http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v2_coco_2018_03_29.tar.gz), Option-2: [YOLOv2](https://pjreddie.com/darknet/yolov2/)). 
 - ReID ([DeepSort](https://drive.google.com/open?id=1m2ebLHB2JThZC8vWGDYEKGsevLssSkjo))
 - Action Detection ([ACAM](https://drive.google.com/open?id=138gfVxWs_8LhHiVO03tKpmYBzIaTgD70)). For ACAM-related setup, please look at [its repo](https://github.com/oulutan/ACAM_Demo) and make sure your environment can run its demo code.
 
