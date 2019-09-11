@@ -1,4 +1,5 @@
 # Caesar: Cross-Camera Complex Activity Detection
+![Alt Text](data/screenshot.gif)
 
 ## Requirements
 - Python 3.X
@@ -28,34 +29,43 @@ The workflow is shown in the image below. You will run one of the scripts to tur
 - ReID ([DeepSort](https://drive.google.com/open?id=1m2ebLHB2JThZC8vWGDYEKGsevLssSkjo))
 - Action Detection ([ACAM](https://drive.google.com/open?id=138gfVxWs_8LhHiVO03tKpmYBzIaTgD70)). For ACAM-related setup, please look at [its repo](https://github.com/oulutan/ACAM_Demo) and make sure your environment can run its demo code.
 
-2. **Check following files**
-- Double check the key-value mapping in ```config/label_mapping.txt``` to reflect your object detector's output (key is the class id, value is the object label). The default one is for SSD-MobileNetV2.
-- Modify the ```config/camera_topology.txt``` to indicate the camera connectivity (see the inline comments in the file for detail)
-- Modify the ```config/act_def.txt``` to define your complex activity using the syntax (see the inline comments in the file for detail)
-- Modify the parameters in ```main_xx.py``` files (look for lines with ```### CONFIG``` comments) to be same as your machines' setup. 
+2. **Update config files to your settings**
+All the files you need to change are in ```config/``` folder.
+- Modify ```label_mapping.txt``` to parse your object detector's output (key is the integer class id, value is the string object label). The default one is for SSD-MobileNetV2.
+- Modify ```camera_topology.txt``` to indicate the camera connectivity (see the inline comments in the file for detail)
+- Modify ```act_def.txt``` to define your complex activity using the syntax (see the inline comments in the file for detail)
+- Modify ```const_xxx.py``` to specify the model path, threshold, machine ip, etc., for this node (mobile, tracker, action, web). Read the inline comments for detail
 
 3. **Run the node**
-- On a mobile device: Run ```python main_mobile.py``` (need GPU). If you are using Nvidia TX2 or above, please set the board to be the best-performance mode to get the max FPS. Here is a [tutorial for TX2](https://www.jetsonhacks.com/2017/03/25/nvpmodel-nvidia-jetson-tx2-development-kit/). 
-- On a server: Run one of ```python main_tracker.py``` / ```python main_act.py``` / ```python main_web.py``` (the tracker and act need GPU).
+- For a mobile node, run ```python main_mobile.py``` (need GPU). If you are using a mobile GPU like Nvidia TX2, please set the board to the best-performance mode for max FPS. Here is a [tutorial for TX2](https://www.jetsonhacks.com/2017/03/25/nvpmodel-nvidia-jetson-tx2-development-kit/). 
+- On a server: Run one of ```python main_tracker.py``` / ```python main_act.py``` / ```python main_web.py``` (the tracker and the act node need GPU).
 
 4. **About the runtime**
-- The node will save logs into a ```debug.log``` text file in the home dir 
-- For GPU-enabled nodes, start their script first and wait for a while to make sure it is ready before starting the up-stream nodes. 
-- If you want to exist, press Ctrl-C to exit, some node may need Ctrl-C second time to fully end. 
+- All the node will periodically ping their next hop for reconnection, so it doesn't matter what order you start/end these nodes. 
+- Each node will save logs into a ```debug.log``` text file in the home dir 
+- If you want to end one node, press Ctrl-C to exit, some node may need Ctrl-C second time to be fully ended. 
 
 5. **Currently Supported Vocabulary**
-- *Cross-tube actions*: 'close', 'near', 'far', 'approach', 'leave', 'cross'
-- *Single-tube actions*: 'start', 'end', 'move', 'stop', 'use_phone', 'carry', 'use_computer', 'give', 'talk', 'sit', 'with_bike', 'with_bag'
 
-## Debugging Step by Step
-- First, turn on the ```SAVE_DATA``` in the main script so it could save its intermediate results to an npy file under then ```res/[main_script_name]``` folder
-- Then, you can modify the config in ```main_gt.py```. This script will read the raw videos and the intermediate data (specified by the parameters), and render the intermediate data to the frames (e.g. detections, track ids, actions) so you can see them. Moreover, it can server as a node and upload the data to the next running node. 
+- *Cross-tube actions*: ```close```, ```near```, ```far```, ```approach```, ```leave```, ```cross```
+- *Single-tube actions*: ```start```, ```end```, ```move```, ```stop```, ```use_phone```, ```carry```, ```use_computer```, ```give```, ```talk```, ```sit```, ```with_bike```, ```with_bag```
 
+## Run Caesar Node by Node (Offline)
+Instead of running all the nodes online, you may want to just run part of the workflow and check the intermediate results (like detection and tracknig). Therefore, you will need to follow these:
+- First, turn on the ```SAVE_DATA``` in ```const.py``` so a node could save its results to an npy file under ```res/[main_node_name]``` 
+- Then, you can run ```main_gt.py```. This script will act as node that reads the raw videos and the npy data. It could render the data in frames (e.g. detections, track ids, actions) so you can see them without running the webserver. Moreover, it upload the data to the next running node. 
 
 **Example:** 
-- Run ```main_mobile.py``` only for several videos and get the data saved. Then you can config the data source as the mobile's output in ```main_gt.py```. Moreover, you should make the tracker's IP as the server address in ```main_gt.py```. 
-- Then, you can run ```main_tracker.py``` which starts waiting for incoming data, and at same time you run ```main_gt.py``` to serve as a mobile node that uploads video and detection results. 
-- When finish all uploading, you can see the tracker's npy file in its own result folder. Put this file's path in ```main_gt.py``` and change the sending address to ```main_act.py```. 
-- After doing this, you can run ```main_gt.py``` again but as a tracker node, and use it to input to ```main_act.py``` for action results. You can repeat the process for debugging ```main_web.py``` in the last step. 
+- Run ```main_mobile.py``` only for several videos and get the data saved. Then you can config the npy data source as the mobile's output for ```main_gt.py```. Moreover, you should make the tracker node's IP as the server address for ```main_gt.py```. 
+- Then, run ```main_tracker.py``` and ```main_gt.py```. Now ```main_gt.py``` displays the mobile's detection result, and also uploads the data to the tracker node for tracking.
+- When finished, you can see the tracker's npy file in its own result folder. Set this file to be the source data path in ```main_gt.py``` and change its server address to ```main_act.py```. 
+- Now you can run ```main_gt.py``` again but as a tracker node, and use it to input to ```main_act.py``` for action results. You can repeat the process for debugging ```main_web.py``` in the last step. 
 
-**If you have any issues, please leave your questions in "issues"**
+## FAQ
+**Q:** Object detection on Nvidia TX2 is slow, how to make it faster? 
+- **A:** Instead of using the default MobileNet model, you should use its optimized [TensorRT](https://developer.nvidia.com/tensorrt) version for TX2. Nvidia has a chain to squeeze the model so it runs much faster. Here is the [tutorial for generating the TensorRT model](https://medium.com/datadriveninvestor/object-detection-on-nvidia-jetson-tx2-6090dc3e0595). You can download ours [here](https://drive.google.com/file/d/1lrke7fRxRDnFfgHvzfz8D1LxFLi3QjLF/view?usp=sharing). The useage of TensorRT model is the same as regular model. With TensorRT, we increase the detection FPS from 4 to 10.5.
+
+**Q:** I want to enable more DNN-detected single tube action, how to do that?
+- **A:** Go to ```config/const_action.py```, add the action name and its detection threshold to the ```NN_ACT_THRES```. Make sure that the action name is already in ```ACTION_STRINGS```.
+
+**If you have any other issues, please leave your questions in "issues"**
