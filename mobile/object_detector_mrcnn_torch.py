@@ -1,5 +1,6 @@
 import logging 
 import os 
+import sys 
 
 from maskrcnn_benchmark.config import cfg
 from mobile.mrcnn_pytorch.predictor import COCODemo

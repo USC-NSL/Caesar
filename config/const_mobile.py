@@ -2,7 +2,7 @@
 SAVE_DATA = True
 
 # True if you want to run the pipeline online and upload the data to next hop 
-UPLOAD_DATA = False
+UPLOAD_DATA = False 
 
 # The uploading FPS, this number should be lower if following nodes are overloaded
 UPLOAD_FPS = 20
@@ -17,7 +17,7 @@ QUEUE_SIZE = 64
 OBJ_LABEL_FILE = 'config/label_mapping.txt'
 
 # Object detection threshold 
-OBJ_THRES = 0.25
+OBJ_THRES = 0.23
 
 # Path to the video file. If set to integer (like 0), will process webcam live feed 
 VIDEO_PATH = 'data/v1.avi' # '0'
@@ -29,12 +29,12 @@ CLIENT_NAME = 'v1'
 SERVER_ADDR = 'localhost:50051'
 
 # Which model you want to use for object detection 
-OBJ_MODEL = 'mobilenet'    # Other choices: 'yolo', 'mrcnn'
+OBJ_MODEL = 'mobilenet'    # Another choice: 'mrcnn'
 
 # Path to the DNN model file 
 OBJ_MODEL_PATH = 'checkpoints/ssd_mobilenet_v2_coco_2018_03_29/frozen_inference_graph.pb'   # mobilenet
-# OBJ_MODEL_PATH = 'checkpoints/visdrone_model_0360000.pth'      # For 'mrcnn'                            # mrcnn
+# OBJ_MODEL_PATH = 'checkpoints/visdrone_model_0360000.pth'      # For 'mrcnn'
 
-# The batch size for obj detector (recommend: 16 for mobilenet, 1 for others)
+# The batch size for obj detector (recommend: 16 for mobilenet, 1 for maskrcnn)
 OBJ_BATCH_SIZE = 16
 

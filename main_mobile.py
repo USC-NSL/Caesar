@@ -44,16 +44,18 @@ def main(running):
                         max_frame_id=const.MAX_FRAME_ID)
 
     detector = None 
-    if const.OBJ_MODEL == 'yolo':
-        from mobile.object_detector_yolo import YOLO
-        detector = YOLO()
-    elif const.OBJ_MODEL == 'mobilenet':
+    if const.OBJ_MODEL == 'mobilenet':
         from mobile.object_detector_tf import TFDetector
         detector = TFDetector(
             graph_path=const.OBJ_MODEL_PATH, 
             label_file=const.OBJ_LABEL_FILE,
         )
     elif const.OBJ_MODEL == 'mrcnn':
+        '''
+        mrcnn_path = os.path.join(os.getcwd(), 'mobile/maskrcnn_benchmark')
+        print("mask rcnn path", mrcnn_path)
+        sys.path.append(mrcnn_path)
+        '''
         from mobile.object_detector_mrcnn_torch import MRCNN
         detector = MRCNN(model_path=const.OBJ_MODEL_PATH)
     else:
@@ -73,7 +75,6 @@ def main(running):
         file_path=RES_FOLDER + '{}.npy'.format(const.CLIENT_NAME)
     )
 
-    time_gap = float(const.OBJ_BATCH_SIZE) / float(const.UPLOAD_FPS)
     print('Mobile init done!')
 
     frame_cache = []
@@ -81,16 +82,18 @@ def main(running):
 
     timer1 = time()
     timer2 = time()
+    time_gap = float(const.OBJ_BATCH_SIZE) / float(const.UPLOAD_FPS)
+
     while running[0]:
         img, frame_id, meta = reader.get_data()
         if not len(img):
             break
 
         # Print frame id and FPS every 20 frames 
-        if not frame_id % 20:
+        if not frame_id % const.OBJ_BATCH_SIZE:
             print('frame {}, avg FPS {}'.format(
-                frame_id,
-                20 / (time()-timer1)
+                    frame_id,
+                    const.OBJ_BATCH_SIZE / (time()-timer1),
                 )
             )
             timer1 = time()
@@ -133,7 +136,8 @@ def main(running):
                 )
 
         time_past = time() - timer2
-        sleep(max(0, time_gap - time_past))
+        sleep_time = max(0, time_gap - time_past)
+        sleep(sleep_time)
         timer2 = time()
 
         frame_cache = []

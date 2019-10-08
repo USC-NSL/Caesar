@@ -19,7 +19,7 @@ class DataReader:
         '''
         self.end_of_video = False
         if not video_path.isdigit() and not os.path.exists(video_path):
-            self.log('Cannot load video: %s' % str(video_path))
+            print('Cannot load video: %s' % str(video_path))
             self.end_of_video = True
             return
 
@@ -66,7 +66,7 @@ class DataReader:
         - meta as a list
         '''
         if self.end_of_video or self.data_ptr >= len(self.data):
-            if len(self.data):                  # read all metadata
+            if not self.end_of_video and len(self.data):    # have read all metadata
                 self.end_of_video = True
             return self.read_frame(), self.frame_id, []
 

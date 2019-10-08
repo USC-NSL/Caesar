@@ -30,7 +30,7 @@ The workflow is shown in the image below. You will run one of the scripts to tur
 git clone https://github.com/USC-NSL/Caesar.git
 ```
 2. **Prepare models** (download the models to the ```checkpoints/``` folder)
-- Object Detection (Option-1: [MobileNet-V2](http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v2_coco_2018_03_29.tar.gz), Option-2: [YOLOv2](https://pjreddie.com/darknet/yolov2/)). 
+- Object Detection (Option-1: [MobileNet-V2](http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v2_coco_2018_03_29.tar.gz), Option-2: [MaskRCNN](https://drive.google.com/file/d/1SCJf2JJmyCbxpDuy4njFaDw7xPqurpaQ/view?usp=sharing)). The MaskRCNN model is slower but detects better for people in drone/surveillance camera. It requires additional setup. Please check [its repo](https://github.com/oulutan/Drone_FasterRCNN) for details and dependency.
 - ReID ([DeepSort](https://drive.google.com/open?id=1m2ebLHB2JThZC8vWGDYEKGsevLssSkjo))
 - Action Detection ([ACAM](https://drive.google.com/open?id=138gfVxWs_8LhHiVO03tKpmYBzIaTgD70)). For ACAM-related setup, please look at [its repo](https://github.com/oulutan/ACAM_Demo) and make sure your environment can run its demo code.
 
